@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Калькулятор</h1>
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.a.label }}<br>
+        {{ form.a(size=32) }}
+    </p>
+    <p>
+        {{ form.operation.label }}<br>
+        {{ form.operation(size=32) }}
+    </p>
+    <p>
+        {{ form.b.label }}<br>
+        {{ form.b(size=32) }}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<br>
+    {% if result %}
+
+    <li>Результата операции: {{ result }}</li>
+    {% endif %}
+{% endblock %}
