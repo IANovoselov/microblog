@@ -5,3 +5,5 @@ flask db migrate - создание сценатрия миграции
 flask db upgrade - обновление базы данных
 
 flask db downgrade - откат последней миграции
+
+flask shell

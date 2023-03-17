@@ -1,10 +1,12 @@
 from app import app, db
-from app.forms import LoginForm, CalculatorForm, RegistrationForm, EditProfileForm, PostForm
+from app.forms import LoginForm, CalculatorForm, RegistrationForm, EditProfileForm, PostForm, \
+    ResetPasswordRequestForm
 from flask import render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
+from app.email import send_password_reset_email
 
 
 @app.before_request
@@ -166,3 +168,22 @@ def explore():
         if posts.has_prev else None
     return render_template("index.html", title='Explore', posts=posts.items,
                            next_url=next_url, prev_url=prev_url)
+
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    import sys
+    sys.path.append('C:\Program Files\JetBrains\PyCharm 2019.1.2\debug-eggs\pydevd-pycharm.egg')
+    import pydevd_pycharm
+    pydevd_pycharm.settrace('localhost', port=11001, stdoutToServer=True, stderrToServer=True)
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html',
+                           title='Reset Password', form=form)
