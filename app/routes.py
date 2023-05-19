@@ -1,12 +1,16 @@
 from app import app, db
 from app.forms import LoginForm, CalculatorForm, RegistrationForm, EditProfileForm, PostForm, \
     ResetPasswordRequestForm, ResetPasswordForm
-from flask import render_template, flash, redirect, url_for, request, session
+from flask import render_template, flash, redirect, url_for, request, session, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
 from app.email import send_password_reset_email
+import pycld2 as cld2
+from flask_babel import get_locale
+from flask import g
+from app.translate import translate
 
 
 @app.before_request
@@ -14,20 +18,34 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+        g.locale = str(get_locale())
 
 
-@app.route('/')
+@app.route('/',  methods=['GET', 'POST'])
 @app.route('/index',  methods=['GET', 'POST'])
 @login_required
 def index():
 
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body=form.post.data, author=current_user)
+        isReliable, textBytesFound, details = cld2.detect(form.post.data)
+        if not details or details[0][1] == 'un':
+            language = ''
+        else:
+            language = details[0][1]
+        post = Post(body=form.post.data, author=current_user, language=language)
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live!')
         return redirect(url_for('index'))
+
+    if request.args.get('del_post'):
+        del_post = request.args.get('del_post')
+        post = Post.query.filter_by(id=int(del_post)).first()
+        if post:
+            post.delete_post()
+            flash('Пост удален')
+
     page = request.args.get('page', 1, type=int)
     posts = current_user.followed_posts().paginate(
         page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
@@ -35,7 +53,7 @@ def index():
     prev_url = url_for('index', page=posts.prev_num) if posts.has_prev else None
     return render_template('index.html', title='Home', form=form,
                            posts=posts.items, next_url=next_url,
-                           prev_url=prev_url)
+                           prev_url=prev_url, page=page)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -201,3 +219,10 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+    return jsonify({'text': translate(request.form['text'],
+                                      request.form['dest_language'])})

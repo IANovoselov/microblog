@@ -11,7 +11,22 @@
             </a>
             says {{ moment(post.timestamp).fromNow() }}:
             <br>
-            {{ post.body }}
+            <span id="post{{ post.id }}">{{ post.body }}</span>
+
+
+            <br><br>
+            {% if post.author.id == current_user.id %}
+            <a href="{{ url_for('index', del_post=post.id, page=page) }}">
+                Удалить
+            </a>
+            {% endif %}
+            {% if post.language and post.language != g.locale %}
+            <span id="translation{{ post.id }}">
+                <a href="javascript:translate(
+                            '#post{{ post.id }}',
+                            '{{ g.locale }}');">{{ _('Перевести') }}</a>
+            </span>
+            {% endif %}
         </td>
     </tr>
 </table>
