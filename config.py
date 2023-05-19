@@ -19,5 +19,5 @@ class Config:
 
     LANGUAGES = ['ru', 'en']
 
-    TRANSLATE_TOKEN = "t1.9euelZqez5WMlp6ZyM2dz5uUlJaTj-3rnpWax4_HnM-TyMfKi5yLi4-OmZrl8_dlY2xc-e8sGXM-_N3z9yUSalz57ywZcz78.sI0wX2RTPXg5cHeAh14zonFQ-FXcOp-x93HSTodN2plz4eVzPFyIweCp3izbFHuGVk2GW57DR5ILx3oU8vSsBw"
-    FOLDER_ID = "b1gftt55ulpmcjat4vvs"
+    TRANSLATE_TOKEN = ""
+    FOLDER_ID = ""
