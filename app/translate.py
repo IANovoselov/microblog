@@ -1,12 +1,13 @@
 import json
-import requests
-from app import app
 
-IAM_TOKEN = app.config['TRANSLATE_TOKEN']
-folder_id = app.config['FOLDER_ID']
+import requests
+from flask import current_app
 
 
 def translate(text, target_language):
+
+    IAM_TOKEN = current_app.config['TRANSLATE_TOKEN']
+    folder_id = current_app.config['FOLDER_ID']
 
     texts = [text]
 

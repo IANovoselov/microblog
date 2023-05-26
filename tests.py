@@ -1,35 +1,44 @@
-from datetime import datetime, timedelta
 import unittest
-from app import app, db
+from datetime import datetime, timedelta
+
+from app import create_app, db
 from app.models import User, Post
+from config import Config
+
+
+class TestConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+
 
 class UserModelCase(unittest.TestCase):
     def setUp(self):
-        with app.app_context():
-            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
-            db.create_all()
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
 
     def tearDown(self):
-        with app.app_context():
-            db.session.remove()
-            db.drop_all()
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
 
     def test_password_hashing(self):
-        with app.app_context():
+        with self.app.app_context():
             u = User(username='susan')
             u.set_password('cat')
             self.assertFalse(u.check_password('dog'))
             self.assertTrue(u.check_password('cat'))
 
     def test_avatar(self):
-        with app.app_context():
+        with self.app.app_context():
             u = User(username='john', email='john@example.com')
             self.assertEqual(u.avatar(128), ('https://www.gravatar.com/avatar/'
                                              'd4c74594d841139328695756648b6bd6'
                                              '?d=identicon&s=128'))
 
     def test_follow(self):
-        with app.app_context():
+        with self.app.app_context():
             u1 = User(username='john', email='john@example.com')
             u2 = User(username='susan', email='susan@example.com')
             db.session.add(u1)
@@ -53,7 +62,7 @@ class UserModelCase(unittest.TestCase):
             self.assertEqual(u2.followers.count(), 0)
 
     def test_follow_posts(self):
-        with app.app_context():
+        with self.app.app_context():
             # create four users
             u1 = User(username='john', email='john@example.com')
             u2 = User(username='susan', email='susan@example.com')

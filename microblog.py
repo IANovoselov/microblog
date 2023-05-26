@@ -1,5 +1,7 @@
-from app import app, db
+from app import create_app, db
 from app.models import User, Post
+
+app = create_app()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
