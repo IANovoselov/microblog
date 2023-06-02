@@ -1,0 +1,16 @@
+-- Установка переменной в окружение
+set FLASK_APP=microblog.py
+
+-- Работа с БД
+flask db init - инициализация каталога миграции
+flask db migrate - создание сценария миграции
+flask db upgrade - обновление базы данных
+
+flask db downgrade - откат последней миграции
+
+-- Обертка в терминал
+flask shell
+
+-- Выгрузка требований
+pip freeze > requirements.txt
+pip install -r requirements.txt

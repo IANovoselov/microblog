@@ -5,15 +5,34 @@ from flask_mail import Message
 from app import current_app
 from app import mail
 
+from typing import List
 
-def send_async_email(app, msg):
+
+def send_async_email(app: current_app, msg: Message) -> None:
+    """
+    Асинхронная обёртка для отправки email сообщения
+    :param app: Экземпляр приложения
+    :param msg:
+    :return:
+    """
     with app.app_context():
         mail.send(msg)
 
 
-def send_email(subject, sender, recipients, text_body, html_body):
+def send_email(subject: str, sender: str, recipients: List[str], text_body: str, html_body: str) -> None:
+    """
+    Отправка email сообщения
+    :param subject: тема письма
+    :param sender: адрес почты отправителя
+    :param recipients: адрес почты получателя
+    :param text_body:
+    :param html_body:
+    :return:
+    """
     with current_app.app_context():
         msg = Message(subject, sender=sender, recipients=recipients)
         msg.body = text_body
         msg.html = html_body
+
+        # Запуск потока
         Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()

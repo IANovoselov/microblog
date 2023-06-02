@@ -26,18 +26,10 @@ moment = Moment()
 
 
 def get_locale():
-    # if a user is logged in, use the locale from the user settings
-    # otherwise try to guess the language from the user accept
-    # header the browser transmits.  We support de/fr/en in this
-    # example.  The best match wins.
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 
 
-babel = Babel(app, locale_selector=get_locale)
-
-
 def create_app(config_class=Config):
-
 
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -48,7 +40,7 @@ def create_app(config_class=Config):
     mail.init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
-    babel.init_app(app)
+    babel = Babel(app, locale_selector=get_locale)
 
     from app import models
     from app.errors import bp as errors_bp
@@ -89,5 +81,3 @@ def create_app(config_class=Config):
         app.logger.info('Microblog startup')
 
     return app
-
-

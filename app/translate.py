@@ -3,10 +3,19 @@ import json
 import requests
 from flask import current_app
 
+from typing import Dict
 
-def translate(text, target_language):
 
-    IAM_TOKEN = current_app.config['TRANSLATE_TOKEN']
+def translate(text: str, target_language: str) -> Dict:
+    """
+    Запрос API Яндекс переводчика
+    :param text: Текст, который переводим
+    :param target_language: Язык, на который переводим
+    :return:
+    """
+
+    # Настройки из Яндекс облака
+    iam_token = current_app.config['TRANSLATE_TOKEN']
     folder_id = current_app.config['FOLDER_ID']
 
     texts = [text]
@@ -19,7 +28,7 @@ def translate(text, target_language):
 
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer {0}".format(IAM_TOKEN)
+        "Authorization": "Bearer {0}".format(iam_token)
     }
 
     response = requests.post('https://translate.api.cloud.yandex.net/translate/v2/translate',
@@ -27,7 +36,5 @@ def translate(text, target_language):
                              headers=headers
                              )
     if response.status_code != 200:
-        return 'Error: the translation service failed.'
+        return 'Error: the translation service failed'
     return json.loads(response.content.decode('utf-8-sig'))
-
-
