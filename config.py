@@ -36,3 +36,11 @@ class Config:
     # Настройки для доступа к API Яндекс переводчика
     TRANSLATE_TOKEN = os.environ.get('TRANSLATE_TOKEN')
     FOLDER_ID = os.environ.get('FOLDER_ID')
+
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+
+    dbconfig = {'host': 'localhost',
+                'port': '5432',
+                'user': os.environ.get('DB_USER'),
+                'password': os.environ.get('DB_PASS_WORD'),
+                'dbname': 'microblog', }

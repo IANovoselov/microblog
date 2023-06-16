@@ -14,3 +14,9 @@ flask shell
 -- Выгрузка требований
 pip freeze > requirements.txt
 pip install -r requirements.txt
+
+
+--индекс
+CREATE INDEX "ipost-body"
+	ON "post" USING gin
+	((to_tsvector('simple'::regconfig, REPLACE(LOWER("body"), 'ё', 'е'))));
