@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-# Установка переменных окружения
+# Установка переменных окружения из файла .env
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
@@ -37,8 +37,10 @@ class Config:
     TRANSLATE_TOKEN = os.environ.get('TRANSLATE_TOKEN')
     FOLDER_ID = os.environ.get('FOLDER_ID')
 
+    # Полнотекстовый поиск Elasticsearch
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 
+    # Словарь конфигурации для подключения к БД
     dbconfig = {'host': 'localhost',
                 'port': '5432',
                 'user': os.environ.get('DB_USER'),

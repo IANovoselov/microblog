@@ -55,6 +55,11 @@ class User(db.Model, UserMixin):
             self.followed.remove(user)
 
     def is_following(self, user):
+        """
+        Проверка, что текущий пользователь подписан на user
+        :param user:
+        :return:
+        """
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
 
