@@ -16,7 +16,8 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
 
     # Настройки БД
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    #SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Пагинация
@@ -46,3 +47,5 @@ class Config:
                 'user': os.environ.get('DB_USER'),
                 'password': os.environ.get('DB_PASS_WORD'),
                 'dbname': 'microblog', }
+
+    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'

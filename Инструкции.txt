@@ -1,5 +1,6 @@
 -- Установка переменной в окружение
 set FLASK_APP=microblog.py
+export
 
 -- Работа с БД
 flask db init - инициализация каталога миграции
@@ -20,3 +21,7 @@ pip install -r requirements.txt
 CREATE INDEX "ipost-body"
 	ON "post" USING gin
 	((to_tsvector('simple'::regconfig, REPLACE(LOWER("body"), 'ё', 'е'))));
+
+
+--start rq
+rq worker microblog-tasks

@@ -12,6 +12,8 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
+from redis import Redis
+import rq
 
 
 from config import Config
@@ -46,6 +48,9 @@ def create_app(config_class=Config):
 
     # app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
     #     if app.config['ELASTICSEARCH_URL'] else None
+
+    app.redis = Redis.from_url(app.config['REDIS_URL'])
+    app.task_queue = rq.Queue('microblog-tasks', connection=app.redis)
 
     from app import models
     from app.errors import bp as errors_bp

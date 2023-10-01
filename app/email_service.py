@@ -19,7 +19,8 @@ def send_async_email(app: current_app, msg: Message) -> None:
         mail.send(msg)
 
 
-def send_email(subject: str, sender: str, recipients: List[str], text_body: str, html_body: str) -> None:
+def send_email(subject: str, sender: str, recipients: List[str], text_body: str, html_body: str,
+               attachments=None, sync=False) -> None:
     """
     Отправка email сообщения
     :param subject: тема письма
@@ -34,5 +35,11 @@ def send_email(subject: str, sender: str, recipients: List[str], text_body: str,
         msg.body = text_body
         msg.html = html_body
 
-        # Запуск потока
-        Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
+        if attachments:
+            for attachment in attachments:
+                msg.attach(*attachment)
+        if sync:
+            mail.send(msg)
+        else:
+            # Запуск потока
+            Thread(target=send_async_email, args=(current_app._get_current_object(), msg)).start()
