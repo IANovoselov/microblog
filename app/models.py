@@ -1,19 +1,17 @@
-from datetime import datetime
+import base64
+import json
+import os
+from datetime import datetime, timedelta
 from hashlib import md5
 from time import time
-import json
-import sys
-from rq import get_current_job
-import redis
-import rq
-import base64
-from datetime import datetime, timedelta
-import os
 
 import jwt
+import redis
+import rq
 from flask import current_app
 from flask import url_for
 from flask_login import UserMixin
+from rq import get_current_job
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login

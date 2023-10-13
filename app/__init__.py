@@ -2,6 +2,7 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
+import rq
 from flask import Flask, current_app
 from flask import request
 from flask_babel import Babel
@@ -11,10 +12,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
-from elasticsearch import Elasticsearch
 from redis import Redis
-import rq
-
 
 from config import Config
 

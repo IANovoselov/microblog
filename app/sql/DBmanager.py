@@ -1,4 +1,5 @@
 import psycopg2
+
 from config import Config
 
 
@@ -32,27 +33,29 @@ class UseDataBase:
         elif exc_type:
             raise exc_type(exc_val)
 
-get_posts_by_search = '''WITH user_ids AS (
-                    SELECT DISTINCT
-                        followed_id user_id
-                    FROM
-                        followers
-                    WHERE
-                        follower_id = {0}
-                    )
-                    SELECT
-                        "user".username
-                      , "user".id
-                      , post.body
-                    FROM
-                        post
-                    JOIN
-                      "user"
-                        ON "user".id = post.user_id
-                    WHERE
-                        (
-                            user_id = {0} OR
-                            user_id = ANY(TABLE user_ids)
-                        ) AND
-                        to_tsvector('simple'::regconfig, body) @@ to_tsquery('simple'::regconfig, '{1}'::text)'''
+get_posts_by_search = '''
+WITH user_ids AS (
+SELECT DISTINCT
+    followed_id user_id
+FROM
+    followers
+WHERE
+    follower_id = {0}
+)
+SELECT
+    "user".username
+  , "user".id
+  , post.body
+FROM
+    post
+JOIN
+  "user"
+    ON "user".id = post.user_id
+WHERE
+    (
+        user_id = {0} OR
+        user_id = ANY(TABLE user_ids)
+    ) AND
+    to_tsvector('simple'::regconfig, body) @@ to_tsquery('simple'::regconfig, '{1}'::text)
+'''
 

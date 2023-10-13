@@ -1,11 +1,10 @@
 from threading import Thread
+from typing import List
 
 from flask_mail import Message
 
 from app import current_app
 from app import mail
-
-from typing import List
 
 
 def send_async_email(app: current_app, msg: Message) -> None:

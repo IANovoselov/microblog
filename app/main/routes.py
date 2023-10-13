@@ -10,11 +10,11 @@ from app import db
 from app.main import bp
 from app.main.forms import CalculatorForm
 from app.main.forms import EditProfileForm, PostForm, SearchForm, MessageForm
-from app.models import User, Post, Message
-from app.translate import translate
-from app.sql.DBmanager import UseDataBase, get_posts_by_search
-
 from app.models import Notification
+from app.models import User, Post, Message
+from app.sql.DBmanager import UseDataBase, get_posts_by_search
+from app.translate import translate
+
 
 @bp.before_request
 def before_request():

@@ -1,9 +1,8 @@
 import json
+from typing import Dict
 
 import requests
 from flask import current_app
-
-from typing import Dict
 
 
 def translate(text: str, target_language: str) -> Dict:
