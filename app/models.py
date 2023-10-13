@@ -76,6 +76,8 @@ class User(PaginatedAPIMixin, db.Model, UserMixin):
 
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
 
+    parties = db.relationship('Party', backref='owner', lazy='dynamic')
+
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
 
@@ -317,6 +319,20 @@ class Task(db.Model):
     def get_progress(self):
         job = self.get_rq_job()
         return job.meta.get('progress', 0) if job is not None else 100
+
+
+class Party(db.Model):
+    """
+    Модель вечеринок
+    """
+    __tablename__ = "party"
+
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.String(64), unique=True)
+    about = db.Column(db.String(140))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), index=True)
+    status = db.Column(db.Integer)
+    address = db.Column(db.String(200))
 
 # db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 # db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)

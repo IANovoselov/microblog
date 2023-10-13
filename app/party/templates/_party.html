@@ -1,0 +1,21 @@
+<table class="table table-hover">
+    <tr>
+        <td width="70px">
+            <a href="{{ url_for('main.user', username=party.owner.username) }}">
+                {{ party.owner.username }}
+            </a>
+        </td>
+        <td>
+            <span id="party{{ party.id }}">{{ party.label }}</span>
+
+        </td>
+        <td>
+            <span id="party{{ party.id }}">{{ party.about }}</span>
+
+        </td>
+        <td>
+            <span id="party{{ party.id }}">{{ party.adress }}</span>
+
+        </td>
+    </tr>
+</table>
