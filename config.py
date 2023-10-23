@@ -23,6 +23,8 @@ class Config:
     # Пагинация
     POSTS_PER_PAGE = 3
 
+    PARTY_PER_PAGE = 10
+
     # Настройки почтового сервера
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT', 465))

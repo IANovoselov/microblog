@@ -3,6 +3,11 @@
 
 {% block app_content %}
 <h1>Hi, {{ current_user.username }}!</h1>
+{% if not form %}
+<a href="{{ url_for('party.parties', create=True) }}">
+    Создать вечеринку
+</a>
+{% endif %}
 {% if form %}
 <div class="row">
     <div class="col-md-4">
@@ -10,19 +15,19 @@
     </div>
 </div>
 {% endif %}
-{% for post in posts %}
-    {% include '_post.html' %}
+{% for party in parties %}
+    {% include '_party.html' %}
 {% endfor %}
 <nav aria-label="...">
     <ul class="pager">
         <li class="previous{% if not prev_url %} disabled{% endif %}">
             <a href="{{ prev_url or '#' }}">
-                <span aria-hidden="true">&larr;</span> Newer posts
+                <span aria-hidden="true">&larr;</span> Назад
             </a>
         </li>
         <li class="next{% if not next_url %} disabled{% endif %}">
             <a href="{{ next_url or '#' }}">
-                Older posts <span aria-hidden="true">&rarr;</span>
+                Дальше <span aria-hidden="true">&rarr;</span>
             </a>
         </li>
     </ul>
